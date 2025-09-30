@@ -334,7 +334,7 @@
             function displaySubjects() {
                 subjectsGrid.innerHTML = '';
                 allSubjects.forEach(subject => {
-                    const subjectQuestions = allQuestions.filter(q => q.subject_id === subject.id);
+                    const subjectQuestions = allQuestions.filter(q => q.subjectId === subject.name);
                     const card = document.createElement('div');
                     card.className = 'bg-white p-5 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer flex flex-col';
                     card.dataset.subjectId = subject.id;
@@ -360,7 +360,7 @@
                 questionTopic.textContent = question.topic || "General";
                 optionsContainer.innerHTML = '';
 
-                question.option.forEach((option, index) => {
+                question.option.choices.forEach((option, index) => {
                     const isSelected = state.selectedOption === index;
                     const optionButton = document.createElement('button');
                     optionButton.className = `w-full text-left p-4 border rounded-lg transition-colors text-slate-700 ${isSelected ? 'bg-blue-100 border-blue-500 font-semibold' : 'bg-white border-slate-300 hover:bg-slate-50'}`;
@@ -408,7 +408,7 @@
             }
             
             function showMockModal() {
-                const subjectQuestions = allQuestions.filter(q => q.subject_id === currentSubject.id);
+                const subjectQuestions = allQuestions.filter(q => q.subjectId === currentSubject.id);
                 totalQuestionsCount.textContent = subjectQuestions.length;
                 Array.from(questionCountSelect.options).forEach(opt => {
                     opt.disabled = parseInt(opt.value) > subjectQuestions.length;
@@ -418,7 +418,7 @@
 
             function startTest(mode, questionCount = 0, timeLimit = 0) {
                 currentMode = mode;
-                let subjectQuestions = allQuestions.filter(q => q.subject_id === currentSubject.id);
+                let subjectQuestions = allQuestions.filter(q => q.subjectId === currentSubject.id);
 
                 // Reset timer and submit button visibility each time a test starts
                 timerEl.parentElement.classList.remove('hidden');
@@ -524,19 +524,12 @@
                 let unattempted = 0;
 
                 testState.forEach((state, index) => {
-                    const question = currentQuestions[index];
                     if (state.selectedOption === null) {
                         unattempted++;
+                    } else if (state.selectedOption === currentQuestions[index].option.answer) {
+                        correctAnswers++;
                     } else {
-                        // Get the text of the user's selected option (e.g., "Coulomb")
-                        const selectedAnswerText = question.option[state.selectedOption];
-
-                        // Compare it with the text of the correct answer from the 'correct' column
-                        if (selectedAnswerText === question.correct) {
-                            correctAnswers++;
-                        } else {
-                            incorrectAnswers++;
-                        }
+                        incorrectAnswers++;
                     }
                 });
 
@@ -592,7 +585,7 @@
 
             // --- Event Listeners ---
             backToDashboardBtn.addEventListener('click', () => switchView('dashboard'));
-            practiceQuestionsBtn.addEventListener('click', () => startTest('practice', allQuestions.filter(q => q.subject_id === currentSubject.id).length));
+            practiceQuestionsBtn.addEventListener('click', () => startTest('practice', allQuestions.filter(q => q.subjectId === currentSubject.id).length));
             createMockBtn.addEventListener('click', showMockModal);
 
             cancelMockBtn.addEventListener('click', () => mockModal.classList.add('hidden'));
