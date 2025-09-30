@@ -311,7 +311,7 @@
                     // Fetch subjects and questions from Supabase in parallel
                     const [subjectsResponse, questionsResponse] = await Promise.all([
                         supabaseClient.from('subjects').select('*'),
-                        supabaseClient.from('math').select('*')
+                        supabaseClient.from('questions').select('*')
                     ]);
 
                     // Error handling
@@ -334,7 +334,7 @@
             function displaySubjects() {
                 subjectsGrid.innerHTML = '';
                 allSubjects.forEach(subject => {
-                    const subjectQuestions = allQuestions.filter(q => q.subjectId === subject.name);
+                    const subjectQuestions = allQuestions.filter(q => q.subjectId === subject.id);
                     const card = document.createElement('div');
                     card.className = 'bg-white p-5 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all cursor-pointer flex flex-col';
                     card.dataset.subjectId = subject.id;
@@ -360,7 +360,7 @@
                 questionTopic.textContent = question.topic || "General";
                 optionsContainer.innerHTML = '';
 
-                question.option.choices.forEach((option, index) => {
+                question.options.forEach((option, index) => {
                     const isSelected = state.selectedOption === index;
                     const optionButton = document.createElement('button');
                     optionButton.className = `w-full text-left p-4 border rounded-lg transition-colors text-slate-700 ${isSelected ? 'bg-blue-100 border-blue-500 font-semibold' : 'bg-white border-slate-300 hover:bg-slate-50'}`;
@@ -417,43 +417,43 @@
             }
 
             function startTest(mode, questionCount = 0, timeLimit = 0) {
-                currentMode = mode;
-                let subjectQuestions = allQuestions.filter(q => q.subjectId === currentSubject.id);
+    currentMode = mode;
+    let subjectQuestions = allQuestions.filter(q => q.subjectId === currentSubject.id);
 
-                // Reset timer and submit button visibility each time a test starts
-                timerEl.parentElement.classList.remove('hidden');
-                submitTestBtn.classList.remove('hidden');
+    // Reset timer and submit button visibility each time a test starts
+    timerEl.parentElement.classList.remove('hidden');
+    submitTestBtn.classList.remove('hidden');
 
-                if (mode === 'mock') {
-                    currentQuestions = subjectQuestions.sort(() => 0.5 - Math.random()).slice(0, questionCount);
-                    testTitle.textContent = `${currentSubject.name} Mock Test`;
-                    startTimer(timeLimit);
-                } else { // practice mode
-                    currentQuestions = subjectQuestions;
-                    testTitle.textContent = `${currentSubject.name} Practice`;
-                    // Hide timer and submit button specifically for practice mode
-                    timerEl.parentElement.classList.add('hidden');
-                    submitTestBtn.classList.add('hidden');
-                }
+    if (mode === 'mock') {
+        currentQuestions = subjectQuestions.sort(() => 0.5 - Math.random()).slice(0, questionCount);
+        testTitle.textContent = `${currentSubject.name} Mock Test`;
+        startTimer(timeLimit);
+    } else { // practice mode
+        currentQuestions = subjectQuestions;
+        testTitle.textContent = `${currentSubject.name} Practice`;
+        // Hide timer and submit button specifically for practice mode
+        timerEl.parentElement.classList.add('hidden');
+        submitTestBtn.classList.add('hidden');
+    }
 
-                currentQuestionIndex = 0;
-                // Initialize test state for the current set of questions
-                testState = currentQuestions.map(() => ({
-                    status: 'not-visited', // valid statuses: not-visited, not-answered, answered, marked, answered-marked
-                    selectedOption: null
-                }));
+    currentQuestionIndex = 0;
+    // Initialize test state for the current set of questions
+    testState = currentQuestions.map(() => ({
+        status: 'not-visited', // valid statuses: not-visited, not-answered, answered, marked, answered-marked
+        selectedOption: null
+    }));
 
-                // This check ensures 'testState' has at least one element before we try to access it
-                if(currentQuestions.length > 0) {
-                    // Mark the first question as the current one to be answered
-                    testState[0].status = 'not-answered'; 
-                    renderQuestion();
-                    switchView('test');
-                } else {
-                    // If a subject has no questions, show an alert and go back.
-                    showConfirmation("No questions available for this subject.", () => switchView('subjectDetail'), true);
-                }
-            }
+    // This check ensures 'testState' has at least one element before we try to access it
+    if(currentQuestions.length > 0) {
+        // Mark the first question as the current one to be answered
+        testState[0].status = 'not-answered'; 
+        renderQuestion();
+        switchView('test');
+    } else {
+        // If a subject has no questions, show an alert and go back.
+        showConfirmation("No questions available for this subject.", () => switchView('subjectDetail'), true);
+    }
+}
 
             function selectOption(optionIndex) {
                 testState[currentQuestionIndex].selectedOption = optionIndex;
@@ -526,7 +526,7 @@
                 testState.forEach((state, index) => {
                     if (state.selectedOption === null) {
                         unattempted++;
-                    } else if (state.selectedOption === currentQuestions[index].option.answer) {
+                    } else if (state.selectedOption === currentQuestions[index].answer) {
                         correctAnswers++;
                     } else {
                         incorrectAnswers++;
