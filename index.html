@@ -419,7 +419,7 @@
                 subjectsGrid.innerHTML = '';
                 allSubjects.forEach(subject => {
                     // Check console log for the correct question ID column name (subjectId vs subject_id)
-                    const subjectQuestions = allQuestions.filter(q => q.subjectId === subject.id);
+                    const subjectQuestions = allQuestions.filter(q => q.subjectid === subject.id); 
                     const card = document.createElement('div');
                     
                     // --- UPDATED: Changing border from border-gray-200 to border-gray-300 as requested ---
@@ -533,7 +533,7 @@
             function startTest(mode, questionCount = 0, timeLimit = 0) {
                 currentMode = mode;
                 // Check console log for the correct question ID column name (subjectId vs subject_id)
-                let subjectQuestions = allQuestions.filter(q => q.subjectId === currentSubject.id);
+                let subjectQuestions = allQuestions.filter(q => q.subjectid === currentSubject.id);
 
                 // Reset timer and submit button visibility each time a test starts
                 timerEl.parentElement.classList.remove('hidden');
