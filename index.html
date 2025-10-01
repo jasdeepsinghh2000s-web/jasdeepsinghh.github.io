@@ -11,10 +11,10 @@
     <style>
         /* Define custom theme colors for utility classes */
         :root {
-            --color-primary: #007AFF; /* Modern Blue Accent */
-            --color-light-bg: #F8F9FA; /* Very light gray body */
-            --color-dark-bg-body: #111827; /* Deep Slate Dark Mode Body */
-            --color-dark-bg-card: #1F2937; /* Dark Slate Dark Mode Card/Container */
+            --color-primary: #007AFF; /* Modern Blue Accent (Kept) */
+            --color-light-bg: #F0F4F7; /* LIGHT MODE: Subtle cool background (Matches Image) */
+            --color-dark-bg-body: #111827; /* DARK MODE: Deep Slate Dark Mode Body */
+            --color-dark-bg-card: #1F2937; /* DARK MODE: Dark Slate Dark Mode Card/Container */
         }
 
         body {
@@ -112,9 +112,9 @@
                 <!-- Dashboard View -->
                 <main id="subjects-view" class="fade-in">
                     <!-- FIX: Set explicit light mode text color for high contrast -->
-                    <h1 class="text-xl md:text-3xl font-bold mb-2 text-gray-900 dark:text-gray-500">Dashboard</h1>
+                    <h1 class="text-xl md:text-3xl font-bold mb-2 text-gray-800 dark:text-gray-500">Dashboard</h1>
                     <!-- FIX: Set light mode subtext to a higher contrast gray-700 -->
-                    <p class="text-gray-700 dark:text-gray-400 mb-8">Time to focus. Pick a subject and get to work.</p>
+                    <p class="text-gray-500 dark:text-gray-400 mb-8">Time to focus. Pick a subject and get to work.</p>
                     
                     <div id="subjects-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
                         <!-- Subject Cards are inserted here -->
@@ -141,14 +141,14 @@
                                 <span class="text-2xl md:text-4xl mr-5">📘</span>
                                 <div>
                                     <h3 class="font-bold text-lg">Practice Questions</h3>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Review all available questions at your own pace. No timers, no pressure.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Review all available questions at your own pace. No timers, no pressure.</p>
                                 </div>
                             </button>
                             <button id="create-mock-btn" class="text-left p-4 md:p-6 bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 border-2 border-transparent hover:border-blue-400 rounded-xl transition-all flex items-start">
                                 <span class="text-2xl md:text-4xl mr-5">🎯</span>
                                 <div>
                                     <h3 class="font-bold text-lg">Create Mock Test</h3>
-                                    <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Simulate exam conditions. Set your questions, face the clock.</p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Simulate exam conditions. Set your questions, face the clock.</p>
                                 </div>
                             </button>
                         </div>
@@ -236,14 +236,14 @@
             <div class="space-y-5">
                 <div>
                     <label for="question-count" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Number of Questions:</label>
-                    <select id="question-count" class="w-full p-2.5 border border-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="question-count" class="w-full p-2.5 border border-gray-600 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option>10</option><option>20</option><option>30</option><option>40</option><option selected>50</option>
                     </select>
                     <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Total available for this subject: <span id="total-questions-count">0</span></p>
                 </div>
                  <div>
                     <label for="time-limit" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1.5">Time Limit (Minutes):</label>
-                    <select id="time-limit" class="w-full p-2.5 border border-gray-300 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                    <select id="time-limit" class="w-full p-2.5 border border-gray-300 dark:bg-gray-900 dark:border-gray-600 dark:text-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                         <option>15</option><option selected>30</option><option>45</option><option>60</option>
                     </select>
                 </div>
@@ -422,18 +422,17 @@
                     const subjectQuestions = allQuestions.filter(q => q.subjectId === subject.id);
                     const card = document.createElement('div');
                     
-                    // In light mode, use border and hover shadow, no solid background.
-                    // Dark mode retains solid background (dark:bg-[--color-dark-bg-card])
-                    const cardClasses = 'p-5 rounded-xl border border-gray-300 dark:bg-[--color-dark-bg-card] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer flex flex-col';
+                    // --- UPDATED: Changing border from border-gray-200 to border-gray-300 as requested ---
+                    const cardClasses = 'p-5 rounded-xl bg-white border border-gray-300 dark:bg-[--color-dark-bg-card] shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all cursor-pointer flex flex-col';
                     
                     card.className = cardClasses;
                     card.dataset.subjectId = subject.id;
                     card.innerHTML = `
                         <div class="flex-grow">
-                            <h3 class="font-bold text-xl text-gray-900 dark:text-gray-100">${subject.name}</h3>
+                            <h3 class="font-bold text-xl text-gray-800 dark:text-gray-100">${subject.name}</h3>
                             <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">${subject.tagline}</p>
                         </div>
-                        <div class="text-sm mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 flex justify-between items-center">
+                        <div class="text-sm mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-gray-500 dark:text-gray-400 flex justify-between items-center">
                              <p class="font-medium">${subjectQuestions.length} Questions Available</p>
                         </div>
                     `;
